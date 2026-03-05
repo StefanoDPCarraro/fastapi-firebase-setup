@@ -1,0 +1,28 @@
+services:
+  api:
+    build: .
+    container_name: vantrack_api
+    # O comando inicia o debugpy e o uvicorn
+    command: >
+      python -m debugpy --listen 0.0.0.0:5678 -m 
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+      - "5678:5678"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Serviço auxiliar para rodar o Ruff de forma isolada
+  lint:
+    build: .
+    container_name: vantrack_lint
+    volumes:
+      - .:/code
+    command: ruff check . --watch # Fica vigiando mudanças e avisa erros de tipagem
