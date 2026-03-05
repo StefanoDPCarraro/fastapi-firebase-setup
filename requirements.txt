@@ -7,3 +7,4 @@ ruff
 pytest
 httpx
 pytest-asyncio
+pre-commit

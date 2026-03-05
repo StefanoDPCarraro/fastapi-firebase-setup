@@ -18,5 +18,6 @@
       }
     }
   },
-  "remoteUser": "root"
+  "remoteUser": "root",
+  "postCreateCommand": "pip install pre-commit && pre-commit install && pre-commit install --hook-type commit-msg"
 }
