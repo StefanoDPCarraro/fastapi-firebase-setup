@@ -19,4 +19,4 @@ def register_parent(
     schema: ParentCreate, service: Annotated[ParentService, Depends(get_service)]
 ) -> ParentRead:
     # O 'schema' aqui já chega validado pelo Pydantic
-    return service.register(schema)
+    return service.register_parent(schema)
