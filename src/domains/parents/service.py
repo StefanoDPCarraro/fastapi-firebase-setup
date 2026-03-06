@@ -1,17 +1,20 @@
+import uuid
+from datetime import datetime
 from typing import Any
 
-from .interfaces import IParentRepository
+from .irepository import IParentRepository
 
 
 class ParentService:
-    # ANN001: repo precisa ser do tipo IParentRepository
-    # -> None: construtores sempre retornam None
     def __init__(self, repo: IParentRepository) -> None:
         self.repo = repo
 
-    # ANN201: define que a função retorna um dicionário
-    # ANN001: define que 'data' é um dicionário com chaves string
-    def create(self, data: dict[str, Any]) -> dict[str, Any]:
-        """Cria um novo registro de pai/responsável."""
-        # Aqui você adicionaria lógicas como gerar ID ou Hash de senha
+    def register_parent(self, schema: Any) -> dict[str, Any]:
+        # Se vier um objeto Pydantic, converte. Se já for dict skipa.
+        data = schema.model_dump() if hasattr(schema, "model_dump") else schema
+
+        """Cria um responsável gerando ID e código de acesso."""
+        data["id"] = data.get("id") or str(uuid.uuid4())
+        data["access_code"] = str(uuid.uuid4())[:8].upper()
+        data["created_at"] = datetime.now()
         return self.repo.save(data)

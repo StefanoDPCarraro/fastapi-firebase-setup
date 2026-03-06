@@ -3,6 +3,9 @@
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "api",
   "workspaceFolder": "/code",
+  "containerEnv": {
+    "PYTHONUNBUFFERED": "1" // Garante que logs e erros apareçam instantaneamente no Debug Console
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -14,10 +17,17 @@
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.languageServer": "Default",
         "editor.formatOnSave": true,
-        "editor.defaultFormatter": "charliermarsh.ruff"
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "remote.autoForwardPorts": false,
+        "remote.portsAttributes": {
+          "8000": { "label": "FastAPI Swagger", "onAutoForward": "openBrowser" },
+          "5678": { "label": "Python Debugger", "onAutoForward": "ignore" }
+        }
       }
     }
   },
   "remoteUser": "root",
-  "postCreateCommand": "pip install pre-commit && pre-commit install && pre-commit install --hook-type commit-msg"
+  "postCreateCommand": "pip install pre-commit && pre-commit install && pre-commit install --hook-type commit-msg",
+  "forwardPorts": [8000]
 }
