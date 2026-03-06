@@ -2,10 +2,8 @@ services:
   api:
     build: .
     container_name: vantrack_api
-    # O comando inicia o debugpy e o uvicorn
+    # Fica em sleep infinitamente (esperando launch do vscode)
     command: sleep infinity
-    #   python -m debugpy --listen 0.0.0.0:5678 -m
-    #   uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/code
       - pre-commit-cache:/root/.cache/pre-commit
@@ -14,11 +12,6 @@ services:
       - "5678:5678"
     env_file:
       - .env
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   # Serviço auxiliar para rodar o Ruff de forma isolada
   lint:
@@ -26,7 +19,6 @@ services:
     container_name: vantrack_lint
     volumes:
       - .:/code
-      - pre-commit-cache:/root/.cache/pre-commit # Mantém o cache vivo
     command: ruff check . --watch # Fica vigiando mudanças e avisa erros de tipagem
 
 volumes:
