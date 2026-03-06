@@ -5,7 +5,7 @@ services:
     # O comando inicia o debugpy e o uvicorn
     command: >
       python -m debugpy --listen 0.0.0.0:5678 -m
-      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/code
       - pre-commit-cache:/root/.cache/pre-commit
