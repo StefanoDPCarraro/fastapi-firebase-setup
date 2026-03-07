@@ -4,7 +4,8 @@
   "service": "api",
   "workspaceFolder": "/code",
   "containerEnv": {
-    "PYTHONUNBUFFERED": "1" // Garante que logs e erros apareçam instantaneamente no Debug Console
+    "PYTHONUNBUFFERED": "1", // Garante que logs e erros apareçam instantaneamente no Debug Console
+    "PYTHONPATH": "/code"
   },
   "customizations": {
     "vscode": {
@@ -14,16 +15,24 @@
         "ms-python.debugpy"
       ],
       "settings": {
+        // --- Python ---
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.languageServer": "Default",
+        // --- Ruff ---
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "charliermarsh.ruff",
         "terminal.integrated.defaultProfile.linux": "bash",
+        // --- Port Forwarding ---
         "remote.autoForwardPorts": false,
         "remote.portsAttributes": {
           "8000": { "label": "FastAPI Swagger", "onAutoForward": "openBrowser" },
           "5678": { "label": "Python Debugger", "onAutoForward": "ignore" }
-        }
+        },
+        // --- Configurações de Teste ---
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": ["tests"],
+        "python.testing.autoTestDiscoverOnSaveEnabled": true
       }
     }
   },
