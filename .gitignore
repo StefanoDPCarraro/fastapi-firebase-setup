@@ -1,3 +1,19 @@
+# Testes e Cobertura
+.coverage
+cov_html/
+htmlcov/
+.pytest_cache/
+
+# Ambiente e Segredos
 .env
 .venv
 firebase-secrets.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ruff
+.ruff_cache
