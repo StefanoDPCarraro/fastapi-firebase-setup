@@ -1,7 +1,7 @@
 [tool.ruff]
 # Define o alvo da versão do Python
 target-version = "py312"
-line-length = 88
+line-length = 140
 # Exclui linting da pasta de testes
 extend-exclude = ["tests"]
 

@@ -6,23 +6,52 @@ import firebase_admin
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from firebase_admin import credentials
+from sqlalchemy import text
 
+from src.config import settings
 from src.domains.parents.controller import router as parents_controller
+from src.domains.parents.entity import ParentModel
+from src.infrastructure.database import Base, engine
 
-from .config import settings
+_ = ParentModel
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Inicialização usando o objeto de settings tipado
+    # 1. Inicialização do Firebase
     if not firebase_admin._apps:
-        cred = credentials.Certificate(settings.firebase_credentials_path)
-        firebase_admin.initialize_app(cred)
+        try:
+            cred = credentials.Certificate(settings.firebase_credentials_path)
+            firebase_admin.initialize_app(cred)
+            print("FIREBASE: Inicializado com sucesso.")
+        except Exception as e:
+            print(f"FIREBASE ERROR: Falha ao carregar credenciais: {e}")
+
+    # 2. Inicialização do PostgreSQL 16
+    try:
+        # Diagnóstico: Lista quais tabelas o SQLAlchemy detectou
+        print(f"DEBUG: Tabelas detectadas para criação: {list(Base.metadata.tables.keys())}")
+
+        # Cria as tabelas no banco de dados se elas não existirem
+        Base.metadata.create_all(bind=engine)
+
+        # Teste rápido de conectividade
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+
+        print("DATABASE: Conexão estabelecida e tabelas sincronizadas!")
+    except Exception as e:
+        print(f"DATABASE ERROR: Falha ao conectar ou criar tabelas: {e}")
+
     yield
+
+    # 3. Shutdown
+    engine.dispose()
+    print("INFRA: Conexões de banco encerradas.")
 
 
 app = FastAPI(
-    title="VanGo API",
+    title=settings.app_name,
     description="API para gestão de transporte escolar (VanGo)",
     version="0.1.0",
     lifespan=lifespan,
@@ -43,16 +72,21 @@ async def catch_all_handler(request: Request, exc: Exception) -> JSONResponse:
     )
 
 
-# Registro dos domínios (Routers)
 app.include_router(parents_controller)
 
 
 @app.get("/health", tags=["Infrastructure"])
 def health_check() -> dict[str, str]:
-    """Endpoint para o Healthcheck do Docker."""
-    return {"status": "ok", "environment": "development"}
+    db_status = "ok"
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception:
+        db_status = "down"
+
+    return {"status": "ok", "database": db_status, "environment": "development"}
 
 
 @app.get("/")
 def read_root() -> dict[str, str]:
-    return {"message": "Bem-vindo à VanGo API. Acesse /docs para a documentação."}
+    return {"message": f"Bem-vindo à {settings.app_name}. Acesse /docs para a documentação interativa."}
