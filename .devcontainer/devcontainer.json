@@ -1,6 +1,8 @@
 {
   "name": "VanTrack Dev Environment",
-  "dockerComposeFile": ["../docker-compose.yml"],
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
   "service": "api",
   "workspaceFolder": "/code",
   "containerEnv": {
@@ -25,18 +27,28 @@
         // --- Port Forwarding ---
         "remote.autoForwardPorts": false,
         "remote.portsAttributes": {
-          "8000": { "label": "FastAPI Swagger", "onAutoForward": "openBrowser" },
-          "5678": { "label": "Python Debugger", "onAutoForward": "ignore" }
+          "8000": {
+            "label": "FastAPI Swagger",
+            "onAutoForward": "openBrowser"
+          },
+          "5678": {
+            "label": "Python Debugger",
+            "onAutoForward": "ignore"
+          }
         },
         // --- Configurações de Teste ---
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
-        "python.testing.pytestArgs": ["tests"],
+        "python.testing.pytestArgs": [
+          "tests"
+        ],
         "python.testing.autoTestDiscoverOnSaveEnabled": true
       }
     }
   },
   "remoteUser": "root",
-  "postCreateCommand": "pip install pre-commit && pre-commit install && pre-commit install --hook-type commit-msg",
-  "forwardPorts": [8000]
+  "postCreateCommand": "git config --global --add safe.directory '*' && pip install pre-commit && pre-commit install && pre-commit install --hook-type commit-msg",
+  "forwardPorts": [
+    8000
+  ]
 }
