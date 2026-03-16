@@ -1,8 +1,7 @@
 services:
   api:
     build: .
-    container_name: vantrack_api
-    # Fica em sleep infinitamente (esperando launch do vscode)
+    container_name: vango_api
     command: sleep infinity
     volumes:
       - .:/code
@@ -11,14 +10,30 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    depends_on:
+      - db
 
-  # Serviço auxiliar para rodar o Ruff de forma isolada
+  db:
+    image: postgres:16-alpine
+    container_name: vango_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      # Expoe na DB_PORT_EXTERNAL o 5432 do container
+      - "${DB_PORT_EXTERNAL}:5432"
+    volumes:
+      - vango_postgres_data:/var/lib/postgresql/data
+
   lint:
     build: .
-    container_name: vantrack_lint
+    container_name: vango_lint
     volumes:
       - .:/code
-    command: ruff check . --watch # Fica vigiando mudanças e avisa erros de tipagem
+    command: ruff check . --watch
 
 volumes:
   pre-commit-cache:
+  vango_postgres_data:

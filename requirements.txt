@@ -9,3 +9,5 @@ httpx
 pytest-asyncio
 pre-commit
 pydantic[email]
+sqlalchemy
+psycopg2-binary
