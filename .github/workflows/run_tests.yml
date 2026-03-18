@@ -41,4 +41,5 @@ jobs:
       - name: Executar Pytest
         env:
           DATABASE_URL: postgresql://root:password123@localhost:5432/vango_test
+          PYTHONPATH: .
         run: pytest
