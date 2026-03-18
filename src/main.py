@@ -29,7 +29,7 @@ app = FastAPI(
 )
 
 
-# expe
+# exper
 @app.exception_handler(Exception)
 async def catch_all_handler(request: Request, exc: Exception) -> JSONResponse:
     traceback.print_exc(file=sys.stderr)
