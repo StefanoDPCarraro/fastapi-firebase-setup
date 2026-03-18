@@ -1,6 +1,6 @@
 def test_pytest_is_working():
     """Teste básico para verificar se o ambiente de testes está ativo."""
-    assert True
+    assert False
 
 
 def test_src_is_reachable():
