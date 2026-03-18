@@ -32,9 +32,6 @@ async def lifespan(app: FastAPI):
         # Diagnóstico: Lista quais tabelas o SQLAlchemy detectou
         print(f"DEBUG: Tabelas detectadas para criação: {list(Base.metadata.tables.keys())}")
 
-        # Cria as tabelas no banco de dados se elas não existirem
-        Base.metadata.create_all(bind=engine)
-
         # Teste rápido de conectividade
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))

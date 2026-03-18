@@ -2,8 +2,8 @@
 # Define o alvo da versão do Python
 target-version = "py312"
 line-length = 140
-# Exclui linting da pasta de testes
-extend-exclude = ["tests"]
+# Exclui linting das pastas de testes e migrações
+extend-exclude = ["tests", "migrations"]
 
 [tool.ruff.lint]
 # E: pycodestyle, F: Pyflakes, I: isort (organiza imports)
